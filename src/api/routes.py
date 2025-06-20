@@ -30,10 +30,17 @@ def signup():
 
     if 'email' not in body or 'password' not in body:
         return jsonify({'err': 'Bad Request'}), 400
-    
+
     user = User()
 
-    return jsonify({}), 200
+    user.email = body['email']
+    user.password = body['password']
+    user.is_active = True
+
+    db.session.add(user)
+    db.session.commit()
+
+    return jsonify({'ok': True}), 201
 
 
 @api.route('/login', methods=['POST'])
