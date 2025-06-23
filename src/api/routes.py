@@ -77,3 +77,19 @@ def get_user_data():
     user = user.serialize()
 
     return jsonify({"user": user}), 200
+
+
+@api.route('/user/delete', methods=['DELETE'])
+@jwt_required()
+def delete_user():
+    current_user_id = get_jwt_identity()
+    user = db.session.get(User, int(current_user_id))
+
+    if user is None:
+        return jsonify({"err": "user not exist"}), 400
+
+    db.session.delete(user)
+
+    db.session.commit()
+
+    return jsonify({}), 204
